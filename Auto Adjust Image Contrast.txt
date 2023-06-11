@@ -1,0 +1,34 @@
+def contrast_grey(img):
+
+  """ Contrast Calculator """
+  
+  high = np.percentile(img, 90)
+  low  = np.percentile(img, 10)
+
+  return (high-low)/np.maximum(10, high+low), high, low
+
+# -------------------------------------------------------------------------------------------------------
+
+def adjust_contrast_grey(img, target = 0.1):
+
+  """ Function for adjusting contrast of image """
+
+  contrast, high, low = contrast_grey(img)
+  print("Contrast value of image: ",contrast)
+
+  if contrast < target:
+      img = img.astype(int)
+      ratio = 200./np.maximum(10, high-low)
+      img = (img - low + 35)*ratio
+      img = np.maximum(np.full(img.shape, 0) ,np.minimum(np.full(img.shape, 255), img)).astype(np.uint8)
+
+  return img
+  
+# -------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------
+
+ 
+   # Contrast
+  # Reading image
+  image1 = cv2.imread(file_path,cv2.IMREAD_GRAYSCALE)
+  image1 = adjust_contrast_grey(image1, target = 0.1)
