@@ -1,0 +1,35 @@
+def sort_bounding_boxes(bounding_boxes):
+
+  """ Sorts a list of bounding boxes in reading order based on y-axis values. """
+
+  # Create a numpy array of the bounding boxes.
+  bbox_array = np.array(bounding_boxes)
+
+  # Get the y-coordinates of the bounding boxes.
+  y_coords = bbox_array[:, 1]
+
+  # Sort the y-coordinates.
+  sorted_y_coords = np.sort(y_coords)
+
+  # Create a set to store the bounding boxes that have been added.
+  added_bboxes = set()
+
+  # Create a list to store the sorted bounding boxes.
+  sorted_bboxes = []
+
+  # Loop through the sorted y-coordinates.
+  for y in sorted_y_coords:
+
+      # Get the bounding boxes with this y-coordinate.
+      matching_bboxes = bbox_array[bbox_array[:, 1] == y]
+
+      # Sort the matching bounding boxes by their x-coordinate.
+      sorted_matching_bboxes = matching_bboxes[np.argsort(matching_bboxes[:, 0])]
+
+      # Add the sorted matching bounding boxes to the list of sorted bounding boxes.
+      for bbox in sorted_matching_bboxes:
+          if tuple(bbox) not in added_bboxes:
+              sorted_bboxes.append(bbox)
+              added_bboxes.add(tuple(bbox))
+
+  return sorted_bboxes
