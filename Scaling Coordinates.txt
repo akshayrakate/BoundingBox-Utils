@@ -1,0 +1,20 @@
+
+def convert_coordinates(geometry, page_dim):
+  
+  """ Function to map the bounding box coordinates from DocTR to document image  """
+
+  #page_dim => Shape of image to be mapped
+  len_x = page_dim[1]   #width
+  len_y = page_dim[0]   #height
+
+  # Coordinates => ((x_min, y_min), (x_max, y_max))
+  (x_min, y_min) = geometry[0]
+  (x_max, y_max) = geometry[1]
+
+  #Mapping
+  x_min = math.floor(x_min * len_x)
+  x_max = math.ceil(x_max * len_x)
+  y_min = math.floor(y_min * len_y)
+  y_max = math.ceil(y_max * len_y)
+
+  return [x_min, y_min, x_max, y_max]
