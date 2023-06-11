@@ -1,0 +1,40 @@
+**Code for concatenating boxes whos x_center and y_center overlaps:**
+
+def calculate_center(box):
+    x1, y1, x2, y2 = box
+    center_x = (x1 + x2) // 2
+    center_y = (y1 + y2) // 2
+    return center_x, center_y
+
+def check_overlap(box1, box2):
+    center_x1, center_y1 = calculate_center(box1)
+    center_x2, center_y2 = calculate_center(box2)
+    overlap_x = abs(center_x1 - center_x2) < (box1[2] - box1[0] + box2[2] - box2[0]) // 2
+    overlap_y = abs(center_y1 - center_y2) < (box1[3] - box1[1] + box2[3] - box2[1]) // 2
+    return overlap_x and overlap_y
+
+def merge_boxes(box1, box2):
+    min_x = min(box1[0], box2[0])
+    min_y = min(box1[1], box2[1])
+    max_x = max(box1[2], box2[2])
+    max_y = max(box1[3], box2[3])
+    return [min_x, min_y, max_x, max_y]
+
+def concatenate_boxes(bounding_boxes_list):
+    merged_boxes = []
+    processed_boxes = set()
+
+    for i in range(len(bounding_boxes_list)):
+        if i in processed_boxes:
+            continue
+        merged_box = bounding_boxes_list[i]
+        for j in range(i + 1, len(bounding_boxes_list)):
+            if j in processed_boxes:
+                continue
+            if check_overlap(merged_box, bounding_boxes_list[j]):
+                merged_box = merge_boxes(merged_box, bounding_boxes_list[j])
+                processed_boxes.add(j)
+        merged_boxes.append(merged_box)
+
+    return merged_boxes
+	
