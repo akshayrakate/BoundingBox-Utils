@@ -1,0 +1,23 @@
+**Code for separating boxes into right,left,center set:**
+
+def calculate_x_center(box):
+    x1, _, x2, _ = box
+    return (x1 + x2) / 2
+
+def filter_bounding_boxes(bounding_boxes_list, page_width):
+    left_boxes = []
+    right_boxes = []
+    center_boxes = []
+
+    for box in bounding_boxes_list:
+        x_center = calculate_x_center(box)
+        box_width = box[2] - box[0]
+
+        if x_center < page_width * 0.3:
+            left_boxes.append(box)
+        elif x_center > page_width * 0.7:
+            right_boxes.append(box)
+        elif box_width > page_width * 0.4:
+            center_boxes.append(box)
+
+    return left_boxes, center_boxes, right_boxes
