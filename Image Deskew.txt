@@ -1,0 +1,36 @@
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+
+**Code-1**
+
+!pip install img2table
+from img2table.document.base.rotation import fix_rotation_image
+
+# Rotate function from img2table
+# image1 = cv2.cvtColor(image1,cv2.COLOR_BGR2GRAY)
+image1 = fix_rotation_image(image1)
+# -------------------------------------------------------------------------------------------------------
+
+ 
+ ** Code - 2**
+ # Reading image
+image1 = cv2.imread(file_path,cv2.IMREAD_GRAYSCALE)
+
+
+def rotate(image, angle,background):
+
+  """ Function will rotate the image by given angle """
+
+  old_width, old_height = image.shape[:2]
+  angle_radian = math.radians(angle)
+  width = abs(np.sin(angle_radian) * old_height) + abs(np.cos(angle_radian) * old_width)
+  height = abs(np.sin(angle_radian) * old_width) + abs(np.cos(angle_radian) * old_height)
+
+  image_center = tuple(np.array(image.shape[1::-1]) / 2)
+  rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1.0)
+  rot_mat[1, 2] += (width - old_width) / 2
+  rot_mat[0, 2] += (height - old_height) / 2
+
+  return cv2.warpAffine(image, rot_mat, (int(round(height)), int(round(width))), borderValue = background)
